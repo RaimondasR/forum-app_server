@@ -1,10 +1,10 @@
-const express = require("express");  // server
-const app = express();
+const express = require('express');  // express for routing
+const server = express();            // express server
 const mongoose = require('mongoose');
 
-app.use(express.json()); /// Kad pasiimtu duomenis is req.body
+server.use(express.json()); /// for getting data from req.body
 
-app.use((req, res, next) => {
+server.use((req, res, next) => {
     // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     // Request methods you wish to allow
@@ -17,7 +17,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.listen(4000);   // listenning to port 4000
+server.listen(4000);   // listening to port 4000
 console.log("listening to port 4000...");
 
 mongoose.connect("mongodb+srv://admin:7Tika$Bapr^Mi*mdb@cluster0.vev4u.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
@@ -28,4 +28,4 @@ mongoose.connect("mongodb+srv://admin:7Tika$Bapr^Mi*mdb@cluster0.vev4u.mongodb.n
   })
 
 const router = require("./routes/main");
-app.use("/", router);
+server.use("/", router);
