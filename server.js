@@ -1,8 +1,14 @@
 const express = require('express');  // express for routing
 const server = express();            // express server
 const mongoose = require('mongoose');
+require('dotenv').config();
 
-server.use(express.json()); /// for getting data from req.body
+server.use(session({
+  secret: process.env.SESSION_KEY,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}))
 
 server.use((req, res, next) => {
     // Website you wish to allow to connect
@@ -17,15 +23,23 @@ server.use((req, res, next) => {
     next();
 });
 
+server.use(express.json()); /// for getting data from req.body
+
 server.listen(4000);   // listening to port 4000
 console.log("listening to port 4000...");
 
-mongoose.connect("mongodb+srv://admin:7Tika$Bapr^Mi*mdb@cluster0.vev4u.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
-  .then(res=>{
-    console.log("connection good")
-  }).catch(e =>{
+mongoose.connect(process.env.MONGO_KEY)
+  .then(res => {
+    console.log("connected to mongoDB")
+  }).catch(e => {
     console.log(e)
   })
 
 const router = require("./routes/main");
 server.use("/", router);
+
+const http = require("http").createServer(server);
+
+http.listen(4000, () => {
+    console.log("port 4000")
+})
