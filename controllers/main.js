@@ -7,19 +7,18 @@ let auctions = [];
 let bids = [];
 
 module.exports = {
-    registerUser: async (req, res) => {
-        const {username, password1} = req.body;
+    userRegister: async (req, res) => {
+        const {userName, password1} = req.body;
 
-        const userExists = await userDb.findOne({username});
+        const userExists = await userDb.findOne({userName});
 
-        if (userExists) return res.send({error: true, message: "username is already taken"});
+        if (userExists) return res.send({error: true, message: "error: username is already taken"});
 
         const pswHash = await crypt.hash(password1, 10);
         const user = new userDb();
-        user.username = username
+        user.userId = uuid.v4()
+        user.userName = userName
         user.password = pswHash
-        user.money = 1000
-        user.secret = uuid.v4()
         await user.save();
         // const user = {
         //     username,

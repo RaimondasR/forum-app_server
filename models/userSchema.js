@@ -1,8 +1,12 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-  username: {
+  userId: {
+    type: String,
+    required: true    
+  },
+  userName: {
     type: String,
     required: true  
   },
@@ -10,15 +14,22 @@ const userSchema = new Schema({
     type: String,
     required: true  
   },
-  money: {
-    type: Number,
-    required: true,
-    default: 1000  
-  },
-  secret: {
+  image: {
     type: String,
-    required: true    
+    default: "https://pixy.org/src/30/thumbs350/301929.jpg"  
+  },
+  registrationDate: {
+    type: Number,
+    required: true
+  },
+  topicsCount: {
+    type: Number,
+    default: 0
+  },
+  messagesCount: {
+    type: Number,
+    default: 0
   }
 });
 
-module.exports = mongoose.model("fakeAppUsers", userSchema);
+module.exports = mongoose.model("ForumAppUserModel", userSchema);

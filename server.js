@@ -1,6 +1,8 @@
 const express = require('express');  // express for routing
 const server = express();            // express server
 const mongoose = require('mongoose');
+const session = require("express-session")
+
 require('dotenv').config();
 
 server.use(session({
