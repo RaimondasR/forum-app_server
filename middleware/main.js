@@ -1,4 +1,5 @@
 const forumUserDb = require("../models/userSchema");
+const forumTopicDb = require("../models/topicSchema");
 
 module.exports = {
     validateUserRegister: async (req, res, next) => {
