@@ -26,7 +26,8 @@ server.use((req, res, next) => {
 
 server.use(express.json()); /// for getting data from req.body
 
-mongoose.connect(process.env.MONGO_KEY)
+// mongoose.connect(process.env.MONGO_KEY)
+mongoose.connect("mongodb+srv://admin:7Tika$Bapr^Mi*mdb@cluster0.vev4u.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
   .then(res => {
     console.log("connected to mongoDB")
   }).catch(e => {

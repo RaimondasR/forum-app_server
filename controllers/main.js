@@ -1,47 +1,46 @@
-const uuid = require("uuid");
-const userDb = require("../models/userSchema");
-const crypt = require("bcrypt");
+const { v4: uuidv4 } = require('uuid');
+const forumUserDb = require("../models/userSchema");
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 
-let users = []
-let auctions = [];
-let bids = [];
+// let users = []
+// let auctions = [];
+// let bids = [];
 
 module.exports = {
     userRegister: async (req, res) => {
-        const {userName, password1} = req.body;
-
-        const userExists = await userDb.findOne({userName});
+        const {userName, password1, userImage} = req.body;
+        const userExists = await forumUserDb.findOne({userName});
 
         if (userExists) return res.send({error: true, message: "error: username is already taken"});
 
-        const pswHash = await crypt.hash(password1, 10);
-        const user = new userDb();
-        user.userId = uuid.v4()
+        const hashPassword = await bcrypt.hash(password1, saltRounds);
+
+        const user = new forumUserDb();
+        user.userId = uuidv4();
         user.userName = userName
-        user.password = pswHash
+        user.password = hashPassword
+        user.registrationDate = Date.now();
+        if (userImage.lenght > 0) {
+          user.userImage = userImage
+        }
         await user.save();
-        // const user = {
-        //     username,
-        //     password: password1,
-        //     secret: uuid.v4(),
-        //     money: 1000,
-        // }
         // users.push(user); 
         res.send({error: false, message: "success: new user registered"});
     },
     login: async (req, res) => {
-        const {username, password} = req.body;
+        const {userName, password} = req.body;
 
-        const userExists = await userDb.findOne({username});
-        if (!userExists) return res.send({error: true, message: "bad credentials"});
-
-        const passMatch = await crypt.compare(password, userExists.password);
-
-        if(passMatch) {
-          return res.send({error: false, message: "success: user logged-in", user: userExists}); 
+        const userExists = await forumUserDb.findOne({userName});
+        if (!userExists) return res.send({error: true, message: "error: bad username or password"});
+        if (userExists) {
+          const passwordsMatch = await bcrypt.compare(password, userExists.password);
+          if(passwordsMatch) {
+            req.session.userName = userName;
+            const user = await forumUserDb.findOne({userName}, {userName: true});
+            return res.send({error: false, message: "success: user logged-in", user}); 
+          }  
         }
-
-        res.send({error: true, message: "bad credentials"});
 
         // const findUser = users.find(x => x.username === username && x.password === password)
         // if(findUser) {
@@ -49,7 +48,7 @@ module.exports = {
         // }
         // return res.send({error: true, message: "no user found"});
     },
-    createAuction: async (req, res) => {
+    createTopic: async (req, res) => {
       const {productPicture, title, condition, startingBid, endTime, secret} = req.body;
       // const user = users.find(x => x.secret === secret);
       const user =  await userDb.findOne({secretKey:secret});
