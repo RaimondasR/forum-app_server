@@ -2,7 +2,6 @@ const express = require('express');  // express for routing
 const server = express();            // express server
 const mongoose = require('mongoose');
 const session = require("express-session")
-
 require('dotenv').config();
 
 server.use(session({
@@ -27,9 +26,6 @@ server.use((req, res, next) => {
 
 server.use(express.json()); /// for getting data from req.body
 
-server.listen(4000);   // listening to port 4000
-console.log("listening to port 4000...");
-
 mongoose.connect(process.env.MONGO_KEY)
   .then(res => {
     console.log("connected to mongoDB")
@@ -43,5 +39,5 @@ server.use("/", router);
 const http = require("http").createServer(server);
 
 http.listen(4000, () => {
-    console.log("port 4000")
+    console.log("listenning to port 4000...")
 })

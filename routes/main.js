@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const middle = require("../middleware/main");
+// const middle = require("../middleware/main");
 const { validateUserRegister, validateUserImage } = require("../middleware/main");
 const { userRegister, login } = require("../controllers/main");
 
