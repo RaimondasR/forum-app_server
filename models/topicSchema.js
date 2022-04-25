@@ -14,6 +14,10 @@ const topicSchema = new Schema({
     type: String,
     required: true  
   },
+  topicMessage: {
+    type: String,
+    required: true  
+  },
   topicImage: {
     type: String,
     default: ""  
