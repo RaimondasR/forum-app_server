@@ -2,7 +2,8 @@ const { v4: uuidv4 } = require('uuid');
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const forumUserDb = require("../models/userSchema");
-const topicUserDb = require("../models/topicSchema");
+const forumTopicDb = require("../models/topicSchema");
+const forumNotificationDb = require("../models/notificationSchema");
 
 module.exports = {
     userRegister: async (req, res) => {
@@ -24,7 +25,7 @@ module.exports = {
         await user.save();
         res.send({error: false, message: "success: new user registered"});
     },
-    login: async (req, res) => {
+    loginUser: async (req, res) => {
         const {userName, password} = req.body;
         const userExists = await forumUserDb.findOne({userName});
 
@@ -55,5 +56,13 @@ module.exports = {
       const user = await forumUserDb.findOne({username});
       await forumUserDb.findOneAndUpdate({username}, {$set: {topicsCount: user.topicsCount + 1}});
       res.send({error: false, message: "success: new topic was created", id});
-    }
+    },
+    getNotifications: async (req, res) => {
+      const {userName} = req.session;
+
+      const notifications = await forumNotificationDb.find({topicCreatorName: userName}).sort({commentDate: -1});
+      const commentsNotSeenCount = await forumNotificationDb.find({topicCreatorName: userName, commentIsSeen: false}).count();
+
+      res.send({success: true, notifications, commentsNotSeenCount});
+  },
   }
