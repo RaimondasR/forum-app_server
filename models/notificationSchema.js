@@ -14,7 +14,7 @@ const notificationSchema = new Schema({
     type: String,
     required: true  
   },
-  topicCreatorName: {
+  topicAuthor: {
     type: String,
     required: true  
   },

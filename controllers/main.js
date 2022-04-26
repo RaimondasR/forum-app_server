@@ -25,7 +25,7 @@ module.exports = {
         await user.save();
         res.send({error: false, message: "success: new user registered"});
     },
-    loginUser: async (req, res) => {
+    userLogin: async (req, res) => {
         const {userName, password} = req.body;
         const userExists = await forumUserDb.findOne({userName});
 
@@ -40,13 +40,13 @@ module.exports = {
         }
     },
     createTopic: async (req, res) => {
-      const {topicTitle, topicCreatorName, topicSummaryText, topicImage} = req.body;
+      const {topicTitle, topicAuthor, topicSummaryText, topicImage} = req.body;
       const {username} = req.session;
       const topic = new forumTopicDb();
       let id = uuidv4();
       topic.topicId = id;
       topic.topicTitle = topicTitle;
-      topic.topicCreatorName = topicCreatorName;
+      topic.topicAuthor = topicAuthor;
       topic.topicSummaryText = topicSummaryText,
       topic.topicImage = topicImage;
       topic.topicCreationDate = Date.now();
@@ -60,8 +60,8 @@ module.exports = {
     getNotifications: async (req, res) => {
       const {userName} = req.session;
 
-      const notifications = await forumNotificationDb.find({topicCreatorName: userName}).sort({commentDate: -1});
-      const commentsNotSeenCount = await forumNotificationDb.find({topicCreatorName: userName, commentIsSeen: false}).count();
+      const notifications = await forumNotificationDb.find({topicAuthor: userName}).sort({commentDate: -1});  // notifications []
+      const commentsNotSeenCount = await forumNotificationDb.find({topicAuthor: userName, commentIsSeen: false}).count();
 
       res.send({success: true, notifications, commentsNotSeenCount});
   },

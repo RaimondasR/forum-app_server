@@ -32,8 +32,8 @@ module.exports = {
       }
     },
     validateIfUserLoggedIn: async (req, res, next) => {
-        const {username} = req.session;
-        if (username) return next();
+        const {userName} = req.session;
+        if (userName) return next();
         res.send({success: false, message: "error: please sign in"})
     },
     validateTopic: async (req, res, next) => {
