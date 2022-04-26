@@ -30,23 +30,10 @@ module.exports = {
         }
         res.send({success: false, message: "error: bad image file format"})
       }
+    },
+    validateIfUserLoggedIn: async (req, res, next) => {
+        const {username} = req.session;
+        if (username) return next();
+        res.send({success: false, message: "error: please sign in"})
     }
-    // validateAuction: (req, res, next) => {
-    //     const {title, condition, startingBid} = req.body;
-
-    //     if (title.length > 20 || title.length < 3) {
-    //         return res.send({error: true, message: "error: bad title length"});
-    //     }
-    //     if (condition === "Pre-Owned") {
-    //         // return res.send({error: false, message: "success: good condition entered"});    
-    //     } else if (condition === "Brand New") {
-    //         // return res.send({error: false, message: "success: good condition entered"});             
-    //     } else {
-    //         return res.send({error: true, message: "error: bad condition entered"});
-    //     }
-    //     if (startingBid <= 0 || startingBid > 1000) {
-    //         return res.send({error: true, message: "error: bad starting bid entered"});
-    //     }        
-    //     next();
-    // }
 }
