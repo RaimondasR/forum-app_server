@@ -35,5 +35,26 @@ module.exports = {
         const {username} = req.session;
         if (username) return next();
         res.send({success: false, message: "error: please sign in"})
-    }
+    },
+    validateTopic: async (req, res, next) => {
+        const { topicTitle, topicMessage, topicImage } = req.body;
+        const topicExists = await forumTopicDb.findOne({topicTitle});
+        if (topicExists) {
+            return res.send({success: false, message: "error: topic tile already exists"});
+        }
+        if (topicTitle.length < 8 || topicTitle.length > 60) {
+            return res.send({success: false, message: "error: title length must be 8-60 characters"});
+        }
+        if (topicMessage.length < 2 || topicMessage.length > 400) {
+            return res.send({success: false, message: "error: comment length should be 2-400 characters"});
+        }
+        if (topicImage.length > 0) {
+            if (topicImage.includes("jpeg") || topicImage.includes("jpg") || topicImage.includes("gif") || topicImage.includes("png")) {
+            } else {
+                res.send({success: false, message: "error: bad image file format"})
+            }
+            
+          }
+        next();
+    },
 }
