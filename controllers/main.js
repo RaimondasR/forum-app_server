@@ -4,10 +4,6 @@ const saltRounds = 10;
 const forumUserDb = require("../models/userSchema");
 const topicUserDb = require("../models/topicSchema");
 
-// let users = []
-// let auctions = [];
-// let bids = [];
-
 module.exports = {
     userRegister: async (req, res) => {
         const {userName, password1, userImage} = req.body;
@@ -26,7 +22,6 @@ module.exports = {
           user.userImage = userImage
         }
         await user.save();
-        // users.push(user); 
         res.send({error: false, message: "success: new user registered"});
     },
     login: async (req, res) => {
@@ -42,26 +37,20 @@ module.exports = {
             return res.send({error: false, message: "success: user logged-in", user}); 
           }  
         }
-
-        // const findUser = users.find(x => x.username === username && x.password === password)
-        // if(findUser) {
-        //     return res.send({error: false, message: "all good", secret: findUser.secret});
-        // }
-        // return res.send({error: true, message: "no user found"});
     },
     createTopic: async (req, res) => {
-      const {topicTitle, topicCreatorName, topicMessage, topicImage} = req.body;
+      const {topicTitle, topicCreatorName, topicSummaryText, topicImage} = req.body;
       const {username} = req.session;
-      const topic = new forumUserDb();
+      const topic = new forumTopicDb();
       let id = uuidv4();
       topic.topicId = id;
       topic.topicTitle = topicTitle;
       topic.topicCreatorName = topicCreatorName;
-      topic.topicMessage = topicMessage,
+      topic.topicSummaryText = topicSummaryText,
       topic.topicImage = topicImage;
       topic.topicCreationDate = Date.now();
-      topic.newestMessageAuthor = username;
-      topic.newestMessageDate = Date.now();
+      topic.newestCommentAuthor = username;
+      topic.newestCommentDate = Date.now();
       topic.save();
       const user = await forumUserDb.findOne({username});
       await forumUserDb.findOneAndUpdate({username}, {$set: {topicsCount: user.topicsCount + 1}});

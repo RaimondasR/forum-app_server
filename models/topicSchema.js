@@ -14,7 +14,7 @@ const topicSchema = new Schema({
     type: String,
     required: true  
   },
-  topicMessage: {
+  topicSummaryText: {
     type: String,
     required: true  
   },
@@ -26,15 +26,15 @@ const topicSchema = new Schema({
     type: Number,
     required: true
   },
-  topicMsessageCount: {
+  topicCommentsCount: {
     type: Number,
     default: 0
   },
-  newestMessageAuthor: {
+  newestCommentAuthor: {
     type: String,
     required: true
   },
-  newestMessageDate: {
+  newestCommentDate: {
     type: Number,
     required: true
   }
