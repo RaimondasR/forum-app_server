@@ -59,10 +59,13 @@ module.exports = {
     },
     getNotifications: async (req, res) => {
       const {userName} = req.session;
-
       const notifications = await forumNotificationDb.find({topicAuthor: userName}).sort({commentDate: -1});  // notifications []
       const commentsNotSeenCount = await forumNotificationDb.find({topicAuthor: userName, commentIsSeen: false}).count();
-
       res.send({success: true, notifications, commentsNotSeenCount});
-  },
+    },
+    getSingleTopic: async (req, res) => {
+      const {id} = req.params;
+      const topic = await forumTopicDb.findOne({topicId: id});
+      res.send({success: true, topic});
+    }
   }
