@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const commentSchema = new Schema({
+    commentId:{
+      type: String,
+      required: true  
+    },
     commentAuthor: {
         type: String,
         required: true
