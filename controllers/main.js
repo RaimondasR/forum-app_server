@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const forumUserDb = require("../models/userSchema");
 const forumTopicDb = require("../models/topicSchema");
+const forumCommentDb = require("../models/commentSchema");
 const forumNotificationDb = require("../models/notificationSchema");
 
 module.exports = {
@@ -67,5 +68,20 @@ module.exports = {
       const {id} = req.params;
       const topic = await forumTopicDb.findOne({topicId: id});
       res.send({success: true, topic});
-    }
+    },
+    getSingleTopicComments: async (req, res) => {
+      const {id} = req.params;
+      const {page} = req.params;
+
+      if (page === String(1)) {
+          const comments = await forumCommentDb.find({commentedTopicId: id}).limit(10);
+          const count = await forumCommentDb.find({commentedTopicId: id}).count();
+          res.send({success: true, comments, count});
+      }
+      if (page !== String(1)) {
+          const comments = await forumCommentDb.find({commentedTopicId: id}).skip(Number(page) * 10 - 10).limit(10);
+          const count = await forumCommentDb.find({commentedTopicId: id}).count();
+          res.send({success: true, comments, count});
+      }          
+  },
   }
