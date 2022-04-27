@@ -42,7 +42,7 @@ module.exports = {
     },
     createTopic: async (req, res) => {
       const {topicTitle, topicAuthor, topicSummaryText, topicImage} = req.body;
-      const {username} = req.session;
+      const {userName} = req.session;
       const topic = new forumTopicDb();
       let id = uuidv4();
       topic.topicId = id;
@@ -51,11 +51,11 @@ module.exports = {
       topic.topicSummaryText = topicSummaryText,
       topic.topicImage = topicImage;
       topic.topicCreationDate = Date.now();
-      topic.newestCommentAuthor = username;
+      topic.newestCommentAuthor = userName;
       topic.newestCommentDate = Date.now();
       topic.save();
-      const user = await forumUserDb.findOne({username});
-      await forumUserDb.findOneAndUpdate({username}, {$set: {topicsCount: user.topicsCount + 1}});
+      const user = await forumUserDb.findOne({userName});
+      await forumUserDb.findOneAndUpdate({userName}, {$set: {topicsCount: user.topicsCount + 1}});
       res.send({success: true, message: "success: new topic was created", id});
     },
     getNotifications: async (req, res) => {
