@@ -75,13 +75,13 @@ module.exports = {
 
       if (page === String(1)) {
           const comments = await forumCommentDb.find({commentedTopicId: id}).limit(10);
-          const count = await forumCommentDb.find({commentedTopicId: id}).count();
-          res.send({success: true, comments, count});
+          const commentsCount = await forumCommentDb.find({commentedTopicId: id}).count();
+          res.send({success: true, comments, commentsCount});
       }
       if (page !== String(1)) {
           const comments = await forumCommentDb.find({commentedTopicId: id}).skip(Number(page) * 10 - 10).limit(10);
-          const count = await forumCommentDb.find({commentedTopicId: id}).count();
-          res.send({success: true, comments, count});
+          const commentsCount = await forumCommentDb.find({commentedTopicId: id}).count();
+          res.send({success: true, comments, commentsCount});
       }          
   },
   }
