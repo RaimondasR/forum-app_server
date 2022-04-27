@@ -7,13 +7,13 @@ module.exports = {
 
         const userExists = await forumUserDb.findOne({userName});
         if (userExists) {
-            return res.send({error: true, message: "error: username is already taken"})
+            return res.send({success: false, message: "error: username is already taken"})
         }
         if(userName.length > 20 || userName.length < 3) {
-            return res.send({error: true, message: "error: bad username"});
+            return res.send({success: false, message: "error: bad username"});
         }
         if(password1 !== password2 || password1.length > 20 || password1.length < 3) {
-            return res.send({error: true, message: "error: bad password"});
+            return res.send({success: false, message: "error: bad password"});
         }
         next();
     },

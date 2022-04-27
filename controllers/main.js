@@ -11,7 +11,7 @@ module.exports = {
         const {userName, password1, userImage} = req.body;
         const userExists = await forumUserDb.findOne({userName});
 
-        if (userExists) return res.send({error: true, message: "error: username is already taken"});
+        if (userExists) return res.send({success: false, message: "error: username is already taken"});
 
         const hashPassword = await bcrypt.hash(password1, saltRounds);
         const user = new forumUserDb();
@@ -24,19 +24,19 @@ module.exports = {
           user.userImage = userImage
         }
         await user.save();
-        res.send({error: false, message: "success: new user registered"});
+        res.send({success: true, message: "success: new user registered"});
     },
     userLogin: async (req, res) => {
         const {userName, password} = req.body;
         const userExists = await forumUserDb.findOne({userName});
 
-        if (!userExists) return res.send({error: true, message: "error: bad username or password"});
+        if (!userExists) return res.send({success: false, message: "error: bad username or password"});
         if (userExists) {
           const passwordsMatch = await bcrypt.compare(password, userExists.password);
           if(passwordsMatch) {
             req.session.userName = userName;
             const user = await forumUserDb.findOne({userName}, {userName: true});
-            return res.send({error: false, message: "success: user logged-in", user}); 
+            return res.send({success: true, message: "success: user logged-in", user}); 
           }  
         }
     },
@@ -56,7 +56,7 @@ module.exports = {
       topic.save();
       const user = await forumUserDb.findOne({username});
       await forumUserDb.findOneAndUpdate({username}, {$set: {topicsCount: user.topicsCount + 1}});
-      res.send({error: false, message: "success: new topic was created", id});
+      res.send({success: true, message: "success: new topic was created", id});
     },
     getNotifications: async (req, res) => {
       const {userName} = req.session;
