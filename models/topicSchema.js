@@ -32,7 +32,7 @@ const topicSchema = new Schema({
   },
   newestCommentAuthor: {
     type: String,
-    required: true
+    // required: true
   },
   newestCommentDate: {
     type: Number,
